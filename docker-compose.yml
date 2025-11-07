@@ -1,0 +1,22 @@
+version: '3.9'
+
+services:
+  mongodb:
+    image: mongo:5.0
+    ports:
+      - 27017:27017
+    volumes:
+      - ~/apps/mongo:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=aquacloud
+      - MONGO_INITDB_ROOT_PASSWORD=aquacloud
+
+  java-app:
+    # Tells Compose to build using the Dockerfile in the current directory
+    build: .
+    ports:
+      # Maps host port 8080 to container port 8080
+      - "8080:8080"
+    # CRITICAL: Ensures the DB is started before trying to start the app
+    depends_on:
+      - mongodb
